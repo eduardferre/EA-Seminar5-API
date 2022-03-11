@@ -11,12 +11,12 @@ class UserRoutes {
 
     public async getUsers(req: Request, res: Response) : Promise<void> { //It returns a void, but internally it's a promise.
         const allUsers = await User.find();
-        if (allUsers.length == 0){
-            res.status(404).send("There are no users yet!")
-        }
-        else{
-            res.status(200).send(allUsers);
-        }
+        // if (allUsers.length == 0){
+        //     res.status(404).send("There are no users yet!")
+        // }
+        // else{
+        res.status(200).send(allUsers);
+        // }
     }
 
     public async getUserByName(req: Request, res: Response) : Promise<void> {
