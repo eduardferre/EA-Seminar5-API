@@ -31,8 +31,8 @@ class UserRoutes {
 
     public async addUser(req: Request, res: Response) : Promise<void> {
         console.log(req.body);
-        const {id, name, age, password} = req.body;
-        const newUser = new User({id, name, age, password});
+        const {id, name, age, password, event} = req.body;
+        const newUser = new User({id, name, age, password, event});
         await newUser.save();
         res.status(200).send('User added!');
     }
@@ -58,13 +58,14 @@ class UserRoutes {
     } 
 
     public async getEventofUser(req: Request, res: Response) : Promise<void> {
-        const userEvent = await User.findOne({ name: req.params.nameUser }).populate('event');
-        console.log(userEvent);
-        if(userEvent == null){
+        const _id = req.params.id;
+        const userFound = await User.findById({ _id }).populate('event', 'id place');
+        console.log(userFound);
+        if(userFound == null){
             res.status(404).send("The user doesn't exist!");
         }
         else{
-            res.status(200).send(userEvent);
+            res.status(200).send(userFound);
         }
     }
 
@@ -74,7 +75,7 @@ class UserRoutes {
         this.router.post('/', this.addUser);
         this.router.put('/:nameUser', this.updateUser);
         this.router.delete('/:nameUser', this.deleteUser);
-        this.router.get('/:nameUser/events', this.getEventofUser);
+        this.router.get('/:id/events', this.getEventofUser);
     }
 }
 const userRoutes = new UserRoutes();
