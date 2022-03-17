@@ -48,7 +48,7 @@ class UserRoutes {
     }
 
     public async deleteUser(req: Request, res: Response) : Promise<void> {
-        const userToDelete = await User.findOneAndDelete ({name:req.params.nameUser}, req.body);
+        const userToDelete = await User.findOneAndDelete({ name: req.params.nameUser }, req.body);
         if (userToDelete == null){
             res.status(404).send("The user doesn't exist!")
         }
@@ -56,12 +56,25 @@ class UserRoutes {
             res.status(200).send('Deleted!');
         }
     } 
+
+    public async getEventofUser(req: Request, res: Response) : Promise<void> {
+        const userEvent = await User.findOne({ name: req.params.nameUser }).populate('event');
+        console.log(userEvent);
+        if(userEvent == null){
+            res.status(404).send("The user doesn't exist!");
+        }
+        else{
+            res.status(200).send(userEvent);
+        }
+    }
+
     routes() {
         this.router.get('/', this.getUsers);
         this.router.get('/:nameUser', this.getUserByName);
         this.router.post('/', this.addUser);
         this.router.put('/:nameUser', this.updateUser);
         this.router.delete('/:nameUser', this.deleteUser);
+        this.router.get('/:nameUser/events', this.getEventofUser);
     }
 }
 const userRoutes = new UserRoutes();
